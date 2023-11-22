@@ -4,6 +4,7 @@
     "module": "CommonJS",
     "strict": true,
     "outDir": "./dist",
-    "types": ["chrome"]
+    "types": ["chrome"],
+    "removeComments": true
   }
 }
