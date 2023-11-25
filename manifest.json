@@ -15,8 +15,14 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "tabs"],
   "background": {
     "service_worker": "dist/background.js"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.tradingview.com/*"],
+      "js": ["dist/contentScript.js"]
+    }
+  ]
 }

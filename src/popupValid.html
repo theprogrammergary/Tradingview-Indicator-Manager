@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Invalid URL</title>
+    <title>Valid URL</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +11,7 @@
             color: #fff;
         }
         h1 {
-            color: #ff3333;
+            color: #0073e6;
             font-size: 24px;
         }
         p {
@@ -23,8 +23,8 @@
         }
         
         .popup-content {
-            width: 300px;
-            height: 200px;
+            width: 600px;
+            height: 500px;
             margin: 0 auto;
             padding: 10px;
             border: 1px solid #0073e6;
@@ -35,9 +35,10 @@
 </head>
 <body>
     <div class="popup-content">
-        <h1>Invalid URL</h1>
-        <p>This extension is for managing private indicators on TradingView.</p>
-        <p>Please visit a <a href="https://www.tradingview.com/">TradingView</a> private indicator page to get started.</p>
+        <h1>TV++</h1>
+        <p>Manage "<span id="indicatorName">Placeholder Indicator Name</span>" Access</p>
+        <button id="fetchDataButton">Fetch Data</button>
     </div>
+    <script src="popupLoad.js"></script>
 </body>
 </html>
