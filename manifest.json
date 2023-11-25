@@ -18,11 +18,5 @@
   "permissions": ["activeTab", "scripting", "tabs"],
   "background": {
     "service_worker": "dist/background.js"
-  },
-  "content_scripts": [
-    {
-      "matches": ["https://www.tradingview.com/*"],
-      "js": ["dist/contentScript.js"]
-    }
-  ]
+  }
 }

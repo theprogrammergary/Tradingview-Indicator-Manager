@@ -6,7 +6,7 @@ chrome.runtime.onMessage.addListener(
       try 
       {
         sendResponse({ data: "we received your message here is your goods" });
-        console.log("received request");
+        console.log(request);
       } catch (error) {
         console.error("error caught in contentscript");
       }
