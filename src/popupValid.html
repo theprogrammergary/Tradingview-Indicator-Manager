@@ -3,33 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CSV User Manager</title>
+    <title>Tradingview Script Management</title>
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <div class="container">
-      <p>
+      <h1>
         Manage Access for -
         <span id="indicatorName">Placeholder Indicator Name</span>
-      </p>
-      <div id="step1">
-        <h2>Step 1: Upload a CSV File</h2>
-        <form id="csvUploadForm">
-          <input type="file" id="csvFileInput" accept=".csv" />
-        </form>
+      </h1>
+      <div id="step1" class="visible">
+        <h2>Start by Uploading a CSV File of Active Users</h2>
+        <input
+          type="file"
+          id="s1UploadFileInput"
+          accept=".csv"
+          style="display: none"
+        />
+        <label for="s1UploadFileInput" id="s1UploadFileLabel">Upload</label>
       </div>
       <div id="step2" class="hidden">
-        <h2>Step 2: Select the Username Column</h2>
-        <label for="usernameColumnSelect">Username Column:</label>
-        <select id="usernameColumnSelect"></select>
-        <button id="confirmColumnBtn">Next</button>
+        <h2>Select The Username Column</h2>
+        <div class="form-group">
+          <select id="s2UsernameColumnSelect"></select>
+        </div>
+        <button id="s2NextBTN">Next</button>
       </div>
       <div id="step3" class="hidden">
-        <h2>Step 3: Review Uploaded Usernames</h2>
-        <div id="usernamesList"></div>
-        <button id="startManagementBtn">Start Management</button>
+        <h2>Confirm Uploaded Usernames</h2>
+        <div id="s3UsernamesList"></div>
+        <button id="s3StartBTN">Start Management</button>
       </div>
     </div>
+    <a href="https://github.com/theprogrammergary" target="_blank"
+      >Created by theGary</a
+    >
     <script src="popup.js"></script>
     <script src="popupCSV.js"></script>
   </body>

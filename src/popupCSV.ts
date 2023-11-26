@@ -1,22 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const csvUploadForm = document.getElementById('csvUploadForm') as HTMLFormElement;
-    const csvFileInput = document.getElementById('csvFileInput') as HTMLInputElement;
+    const csvUploadLabel = document.getElementById('s1UploadFileLabel') as HTMLLabelElement;
+    const s1UploadFileInput = document.getElementById('s1UploadFileInput') as HTMLInputElement;
     const step1 = document.getElementById('step1') as HTMLDivElement;
     const step2 = document.getElementById('step2') as HTMLDivElement;
     const step3 = document.getElementById('step3') as HTMLDivElement;
-    const usernameColumnSelect = document.getElementById('usernameColumnSelect') as HTMLSelectElement;
-    const confirmColumnBtn = document.getElementById('confirmColumnBtn') as HTMLButtonElement;
-    const usernamesList = document.getElementById('usernamesList') as HTMLDivElement;
-    const startManagementBtn = document.getElementById('startManagementBtn') as HTMLButtonElement;
+    const s2UsernameColumnSelect = document.getElementById('s2UsernameColumnSelect') as HTMLSelectElement;
+    const s2NextBTN = document.getElementById('s2NextBTN') as HTMLButtonElement;
+    const s3UsernamesList = document.getElementById('s3UsernamesList') as HTMLDivElement;
+    const s3StartBTN = document.getElementById('s3StartBTN') as HTMLButtonElement;
 
     
     let csvData: string[][] = [];
     let selectedUsernameColumn = 1;
 
     // Step 1: File upload
-    csvUploadForm.addEventListener('change', (e) => {
-        const file = csvFileInput.files?.[0];
+    s1UploadFileInput.addEventListener('change', (e) => {
+        const file = s1UploadFileInput.files?.[0];
         if (file) {
+            csvUploadLabel.textContent = file.name;
             const reader = new FileReader();
             reader.onload = (event) => {
                 const result = event.target?.result as string;
@@ -24,12 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 moveToStep2();
             };
             reader.readAsText(file);
+        } else {
+            csvUploadLabel.textContent = "Upload";
         }
     });
 
     // Step 2: Ask for the username column
-    confirmColumnBtn.addEventListener('click', () => {
-        const selectedOption = usernameColumnSelect.options[usernameColumnSelect.selectedIndex];
+    s2NextBTN.addEventListener('click', () => {
+        const selectedOption = s2UsernameColumnSelect.options[s2UsernameColumnSelect.selectedIndex];
         if (selectedOption) {
             selectedUsernameColumn = parseInt(selectedOption.value, 10);
             moveToStep3();
@@ -39,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function populateColumnDropdown() {
-        usernameColumnSelect.innerHTML = '';
+        s2UsernameColumnSelect.innerHTML = '';
 
         if (csvData.length > 0) {
             const headerRow = csvData[0];
@@ -49,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const option = document.createElement('option');
                     option.text = `Column ${index + 1}: ${columnName}`;
                     option.value = `${index + 1}`;
-                    usernameColumnSelect.appendChild(option);
+                    s2UsernameColumnSelect.appendChild(option);
                 }
             }
         } else {
@@ -64,12 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedUsernameColumn > 0) {
             const usernames = csvData.map((row) => row[selectedUsernameColumn - 1]);
             usernames.shift();
-            usernamesList.innerHTML = ''
+            s3UsernamesList.innerHTML = ''
 
             usernames.forEach((username) => {
                 const usernameElement = document.createElement('div');
                 usernameElement.textContent = username;
-                usernamesList.appendChild(usernameElement);
+                s3UsernamesList.appendChild(usernameElement);
             });
 
         } else {
@@ -78,8 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Step 4: Manage Access
-    startManagementBtn.addEventListener('click', () => {
-        alert('Starting management. You can add your code here.');
+    s3StartBTN.addEventListener('click', () => {
+        alert('Starting management. Please do not close extension');
     });
 
 
