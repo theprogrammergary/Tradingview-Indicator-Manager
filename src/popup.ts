@@ -1,8 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message.type === 'indicatorName') {
-            console.log("received indicatorName:", message.value);
-            setIndicatorName(message.value);
+        if (message.type === 'validManageAccessPage') {
+            console.log("validManageAccessPage:", message);
+
+            if (message.manageAccessBTN) {
+                setIndicatorName(message.indicatorName);
+                sessionStorage.setItem('scriptID', message.scriptID);
+            } else {
+                setInvalidHTML();
+            }
         }
     });
 
@@ -10,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tabs[0].id) {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id},
-                func: fetchIndicatorName
+                func: validManageAccessPage
             });
         }
     });
@@ -18,22 +24,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+function validManageAccessPage(): void {
+    const manageAccessBTN = document.querySelector('.tv-social-stats__item.i-checked.js-chart-view__manage-access.apply-common-tooltip.tv-social-stats__item--button') as HTMLButtonElement | null;
+    const scriptID = manageAccessBTN?.getAttribute('data-script-id-part') ?? null;
 
-
-function fetchIndicatorName() {
     const indicatorNameElement = document.querySelector('.tv-chart-view__title-name.js-chart-view__name') as HTMLSpanElement | null;
-    if (indicatorNameElement) {
-        const indicatorName = indicatorNameElement.textContent || '';
-        try {
-            chrome.runtime.sendMessage({ type: 'indicatorName', value: indicatorName });
-            console.log("sent indicatorName:", indicatorName);
-        } catch {
-            console.log("error caught sending message");
-        }
-    } else {
-        console.error("indicatorName Element Not Found!");
+    const indicatorName = indicatorNameElement?.textContent ?? null;
+
+    try {
+        chrome.runtime.sendMessage({ type: 'validManageAccessPage', manageAccessBTN: !!manageAccessBTN, scriptID: scriptID, indicatorName: indicatorName });
+    } catch {
+        console.error("Error caught sending message");
+    }
+
+    if (!manageAccessBTN) {
+        console.error("manageAccess Button Not Found!");
+    }
+
+    if (!indicatorName) {
+        console.error("Indicator Name Not Found");
     }
 }
+
+
+
+function setInvalidHTML(): void {
+    window.location.href = 'popupInvalid.html';
+}
+
 
 
 function setIndicatorName(newName: string): void {
@@ -45,3 +63,4 @@ function setIndicatorName(newName: string): void {
         console.error('Indicator name element not found');
     }
 }
+

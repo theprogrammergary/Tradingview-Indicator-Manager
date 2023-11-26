@@ -31,16 +31,25 @@
         border-radius: 5px;
         background-color: rgb(20, 23, 33);
       }
+
+      #indicatorName {
+        font-style: italic;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
     <div class="popup-content">
       <h1>TV++</h1>
       <p>
-        Manage <span id="indicatorName">Placeholder Indicator Name</span>
-        Access
+        Manage Access for -
+        <span id="indicatorName">Placeholder Indicator Name</span>
       </p>
+      <form id="csvUploadForm">
+        <input type="file" id="csvFileInput" accept=".csv" />
+      </form>
     </div>
     <script src="popup.js"></script>
+    <script src="popupCSV.js"></script>
   </body>
 </html>
