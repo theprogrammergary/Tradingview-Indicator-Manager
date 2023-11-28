@@ -80,13 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Step 4: Manage Access
-    s3StartBTN.addEventListener('click', () => {
-        alert('Starting management. Please do not close extension');
-    });
-
-
-
+    
     function moveToStep1() {
         step2.classList.add('hidden');
         step1.classList.remove('hidden');
