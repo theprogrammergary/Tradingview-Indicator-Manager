@@ -1,2 +1,8 @@
+# chrome-extension
 node_modules/
 dist/
+
+# desktop-app
+.venv
+__pycache__/
+*.DS_Store
