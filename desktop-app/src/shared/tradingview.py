@@ -18,7 +18,7 @@ from shared.config import (
     logger,
 )
 from shared.login import TradingviewLogin
-from urllib3 import encode_multipart_formdata
+from urllib3 import encode_multipart_formdata  # pylint: disable=C0411
 
 
 class Tradingview(tk.Frame):

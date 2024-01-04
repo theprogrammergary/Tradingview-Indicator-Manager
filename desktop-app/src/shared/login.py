@@ -79,7 +79,7 @@ class TradingviewLogin(tk.Frame):
         except FileNotFoundError:
             return None
 
-    def create_selenium_webdriver(self) -> WebDriver | None:
+    def create_selenium_webdriver(self, headless: bool) -> WebDriver | None:
         """Creates the browser for user tradingview login.
 
         Returns:
@@ -89,6 +89,8 @@ class TradingviewLogin(tk.Frame):
         options = Options()
         options.add_argument(argument="--window-size=1920,1200")
         options.add_argument(argument="--disable-blink-features=AutomationControlled")
+        if headless:
+            options.add_argument(argument="--headless")
 
         web_driver: WebDriver | None = None
 
@@ -219,7 +221,7 @@ class TradingviewLogin(tk.Frame):
             0 = Success
         """
 
-        web_driver: WebDriver | None = self.create_selenium_webdriver()
+        web_driver: WebDriver | None = self.create_selenium_webdriver(headless=False)
         if web_driver is None:
             messagebox.showerror(
                 title="ERROR",

@@ -17,8 +17,8 @@ RUNTIME_PATH: str = os.path.join(
     os.path.dirname(p=os.path.abspath(path=__file__)), ".."
 )
 
-SESSION_FILE: str = os.path.join(RUNTIME_PATH, "shared", "session.json")
-
+SESSION_FILE: str = os.path.join(RUNTIME_PATH, "shared", "login.json")
+INDICATORS_FILE: str = os.path.join(RUNTIME_PATH, "shared", "indicators.json")
 
 # gui vars
 GUI_WIDTH: int = 1000
@@ -36,6 +36,19 @@ REMOVE_ACCESS_URL: str = "https://www.tradingview.com/pine_perm/remove/"
 USER_ACCESS_LIST_URL: str = (
     "https://www.tradingview.com/pine_perm/list_users/?limit=10&order_by=-created"
 )
+PINE_NAME_SELECTOR: str = (
+    "#tv-content > div > div > div.tv-chart-view__section >"
+    "div.tv-chart-view__header > div.tv-chart-view__title.selectable"
+    "> div > div.tv-chart-view__title-row.tv-chart-view__title-row--name > div > h1"
+)
+PINE_ID_SELECTOR: str = (
+    "#tv-content > div > div > div.tv-chart-view__section >"
+    "div.tv-chart-view__permission-block.tv-chart-view__permission"
+    "-block--invite-only-access-granted > div.tv-chart-view__script-actions"
+    "> button.tv-social-stats__item.i-checked.js-chart-view__manage-access."
+    "apply-common-tooltip.tv-social-stats__item--button"
+)
+
 
 # logger
 logger.remove()
