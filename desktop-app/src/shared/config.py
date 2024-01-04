@@ -33,7 +33,9 @@ MESSAGE_HEIGHT: int = 100
 LOGIN_CHECK_URL: str = "https://www.tradingview.com/tvcoins/details/"
 ADD_ACCESS_URL: str = "https://www.tradingview.com/pine_perm/add/"
 REMOVE_ACCESS_URL: str = "https://www.tradingview.com/pine_perm/remove/"
-
+USER_ACCESS_LIST_URL: str = (
+    "https://www.tradingview.com/pine_perm/list_users/?limit=10&order_by=-created"
+)
 
 # logger
 logger.remove()
