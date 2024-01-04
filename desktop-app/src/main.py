@@ -13,12 +13,11 @@ from typing import Any
 
 # custom imports
 import ttkbootstrap as ttk
-from config import GUI_HEIGHT, GUI_NAME, GUI_WIDTH, RUNTIME_PATH
-
-# from pages.edit_indicators import StartPage
+from pages.edit_indicators import EditIndicatorsPage
 from pages.manage_list import ListPage
 from pages.manage_single import SingleUserPage
 from pages.start_page import StartPage
+from shared.config import GUI_HEIGHT, GUI_NAME, GUI_WIDTH, RUNTIME_PATH
 
 
 class MainApplication(tk.Tk):
@@ -67,6 +66,7 @@ class MainApplication(tk.Tk):
             "manage_list": ListPage,
             "manage_single": SingleUserPage,
             "start_page": StartPage,
+            "edit_indicator_list": EditIndicatorsPage,
         }
 
         if frame_name in frame_mapping:
