@@ -6,6 +6,7 @@ dist/
 .venv
 __pycache__/
 *.DS_Store
-session.json
+login.json
 desktop-app/.DS_Store
 *.log
+.DS_Store
