@@ -54,7 +54,7 @@ class SingleUserPage(tk.Frame):
         manage_user_input = tk.StringVar()
 
         input_username = ttk.Entry(
-            master=self, textvariable=manage_user_input, font=(None, 14)
+            master=self, textvariable=manage_user_input, font=(None, 18)
         )
 
         input_username.place(
@@ -89,15 +89,34 @@ class SingleUserPage(tk.Frame):
             # ).start(),
         )
 
-        button_add.place(relx=0.25, rely=0.265, relwidth=0.24, anchor=tk.CENTER)
-        button_check.place(relx=0.5, rely=0.265, relwidth=0.24, anchor=tk.CENTER)
-        button_remove.place(relx=0.75, rely=0.265, relwidth=0.24, anchor=tk.CENTER)
+        button_add.place(
+            relx=0.25, rely=0.265, relwidth=0.24, relheight=0.05, anchor=tk.CENTER
+        )
+        button_check.place(
+            relx=0.5, rely=0.265, relwidth=0.24, relheight=0.05, anchor=tk.CENTER
+        )
+        button_remove.place(
+            relx=0.75, rely=0.265, relwidth=0.24, relheight=0.05, anchor=tk.CENTER
+        )
 
         # Create output textbox
         listbox_output = ScrolledText(
-            master=self,
-            highlightthickness=1,
+            master=self, highlightthickness=1, state="disabled", font=(None, 18)
         )
+
         listbox_output.place(
             relx=0.5, rely=0.65, anchor=tk.CENTER, relheight=0.63, relwidth=0.95
         )
+
+        # Create scrollbar for textbox
+        scrollbar = ttk.Scrollbar(self, orient="vertical", command=listbox_output.yview)
+
+        scrollbar.place(
+            relx=0.97,
+            rely=0.65,
+            anchor="center",
+            relheight=0.63,
+            relwidth=0.02,
+        )
+
+        listbox_output.config(yscrollcommand=scrollbar.set)

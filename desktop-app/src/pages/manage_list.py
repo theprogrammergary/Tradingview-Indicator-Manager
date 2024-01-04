@@ -59,9 +59,21 @@ class ListPage(tk.Frame):
 
         # Create output textbox
         listbox_output = ScrolledText(
-            master=self,
-            highlightthickness=1,
+            master=self, highlightthickness=1, state="normal", font=(None, 18)
         )
         listbox_output.place(
             relx=0.5, rely=0.62, anchor=tk.CENTER, relheight=0.68, relwidth=0.95
         )
+
+        # Create scrollbar for textbox
+        scrollbar = ttk.Scrollbar(self, orient="vertical", command=listbox_output.yview)
+
+        scrollbar.place(
+            relx=0.97,
+            rely=0.62,
+            anchor="center",
+            relheight=0.68,
+            relwidth=0.02,
+        )
+
+        listbox_output.config(yscrollcommand=scrollbar.set)
