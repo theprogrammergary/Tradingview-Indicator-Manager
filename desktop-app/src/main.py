@@ -5,19 +5,20 @@ Tradingview Indicator Access Management Program
     -Can manage users from a .csv list for multiple sripts at once
 """
 
+
 # standard imports
 import os
+import threading
 import tkinter as tk
 from tkinter import messagebox
-from typing import Any
 
 # custom imports
 import ttkbootstrap as ttk
 from pages.edit_indicators import EditIndicatorsPage
 from pages.manage_list import ListPage
 from pages.manage_single import SingleUserPage
-from pages.start_page import StartPage
 from shared.config import GUI_HEIGHT, GUI_NAME, GUI_WIDTH, RUNTIME_PATH
+from shared.login import Login
 
 
 class MainApplication(tk.Tk):
@@ -50,37 +51,50 @@ class MainApplication(tk.Tk):
         icon = tk.PhotoImage(file=icon_path)
         self.iconphoto(True, icon)
 
-        # Create the start page
-        self.start_page = StartPage(parent=self)
-        self.start_page.pack()
-
-    def show_frame(self, frame_name) -> None:
-        """
-        Shows the frame based on the provided frame_name.
-
-        Args:
-            frame_name (str): The name of the frame to be shown.
-        """
-
-        frame_mapping: dict[str, Any] = {
-            "manage_list": ListPage,
-            "manage_single": SingleUserPage,
-            "start_page": StartPage,
-            "edit_indicator_list": EditIndicatorsPage,
-        }
-
-        if frame_name in frame_mapping:
-            new_frame = frame_mapping[frame_name](parent=self)
-
-            if self.start_page is not None:
-                self.start_page.pack_forget()
-
-            new_frame.pack()
-            self.start_page: tk.Frame = new_frame
+        self.login = Login(parent=self)
+        if self.login.logged_in:
+            self.create_ui()
 
         else:
-            error_message: str = f"Frame '{frame_name}' not found."
-            messagebox.showerror(title="Error", message=error_message)
+            self.withdraw()
+            messagebox.showerror(
+                title="Login Failed",
+                message="Please login to Tradingview to use the app.",
+            )
+
+            self.exit_application()
+
+    def create_ui(self) -> None:
+        """
+        Create the UI tabs for the application
+        """
+
+        self.notebook = ttk.Notebook(master=self)
+
+        edit_indicators_frame: ttk.Frame = ttk.Frame(master=self.notebook)
+        single_management_frame: ttk.Frame = ttk.Frame(master=self.notebook)
+        list_management_frame: ttk.Frame = ttk.Frame(master=self.notebook)
+
+        self.notebook.add(child=edit_indicators_frame, text="Edit")
+        EditIndicatorsPage(parent=edit_indicators_frame, login=self.login)
+
+        self.notebook.add(child=single_management_frame, text="Single User Management")
+        SingleUserPage(parent=single_management_frame, login=self.login)
+
+        self.notebook.add(child=list_management_frame, text="List Management")
+        ListPage(parent=list_management_frame, login=self.login)
+
+        self.notebook.pack(fill="both", expand=True)
+
+    def exit_application(self) -> None:
+        """
+        Full closes the application
+        """
+
+        for thread in threading.enumerate():
+            if thread != threading.current_thread():
+                thread.join()
+        self.destroy()
 
 
 if __name__ == "__main__":
