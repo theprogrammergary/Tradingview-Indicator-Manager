@@ -61,19 +61,19 @@ class ListPage(tk.Frame):
         )
 
         self.listbox_output.place(
-            relx=0.5, rely=0.62, anchor=tk.CENTER, relheight=0.68, relwidth=0.95
+            relx=0.5, rely=0.62, anchor=tk.CENTER, relheight=0.69, relwidth=0.95
         )
 
         # Create scrollbar for textbox
         scrollbar = ttk.Scrollbar(
-            self, orient="vertical", command=self.listbox_output.yview
+            master=self.parent, orient="vertical", command=self.listbox_output.yview
         )
 
         scrollbar.place(
             relx=0.97,
             rely=0.62,
             anchor="center",
-            relheight=0.68,
+            relheight=0.69,
             relwidth=0.02,
         )
 
