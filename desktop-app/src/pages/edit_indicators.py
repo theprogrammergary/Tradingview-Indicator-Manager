@@ -4,15 +4,15 @@ GUI for managing a json list of Tradingview Indicators
 
 # standard imports
 import json
+import threading
 import tkinter as tk
 from tkinter import messagebox, ttk
 from typing import Any
 
 # custom imports
 from shared.config import INDICATORS_FILE, logger
-
-# from shared.tradingview import Tradingview
 from shared.indicators import Indicator
+from shared.login import Login
 
 
 class EditIndicatorsPage(tk.Frame):
@@ -23,28 +23,16 @@ class EditIndicatorsPage(tk.Frame):
         tk (tk.Frame): Main GUI tk.Frame
     """
 
-    def __init__(self, parent) -> None:
-        self.parent: tk.Tk = parent
+    def __init__(self, parent: ttk.Frame, login: Login) -> None:
         super().__init__(master=parent)
+        self.parent: ttk.Frame = parent
+        self.login: Login = login
 
         self.pack(fill="both", expand=True)
 
-        # Create back button
-        button_back = ttk.Button(
-            master=self,
-            text="Go Back",
-            style="medium.primary.TButton",
-            command=lambda: parent.show_frame("start_page"),
-        )
-
-        button_back.place(
-            relx=0.02,
-            rely=0.02,
-        )
-
         # Create page label
         label_page = ttk.Label(
-            master=self,
+            master=self.parent,
             text="Edit Tradingview Indicator List",
             font=(None, 32, "bold"),
             anchor="center",
@@ -52,13 +40,8 @@ class EditIndicatorsPage(tk.Frame):
 
         label_page.place(relx=0.5, rely=0.05, anchor="center")
 
-        # Create listbox to display indicators
-        # self.listbox_indicators = ScrolledText(
-        #     master=self, highlightthickness=1, state="disabled", font=(None, 18)
-        # )
-
         self.listbox_indicators = tk.Listbox(
-            master=self,
+            master=self.parent,
             selectmode=tk.SINGLE,
             font=(None, 18),
         )
@@ -73,7 +56,7 @@ class EditIndicatorsPage(tk.Frame):
 
         # Create scrollbar for listbox
         scrollbar = ttk.Scrollbar(
-            master=self, orient="vertical", command=self.listbox_indicators.yview
+            master=self.parent, orient="vertical", command=self.listbox_indicators.yview
         )
 
         scrollbar.place(
@@ -88,7 +71,7 @@ class EditIndicatorsPage(tk.Frame):
 
         # Create Add button
         button_add = ttk.Button(
-            master=self,
+            master=self.parent,
             text="     Add\nIndicator",
             style="xl.primary.TButton",
             command=self.add_indicator,
@@ -100,7 +83,7 @@ class EditIndicatorsPage(tk.Frame):
 
         # Create Remove button
         button_remove = ttk.Button(
-            master=self,
+            master=self.parent,
             text="Remove\nIndicator",
             style="xl.primary.TButton",
             command=self.remove_indicator,
@@ -110,16 +93,20 @@ class EditIndicatorsPage(tk.Frame):
             relx=0.835, rely=0.72, relwidth=0.25, relheight=0.3, anchor="center"
         )
 
-        self.load_indicators()
-        self.update()
+        loading_thread = threading.Thread(target=self.load_indicators())
+        loading_thread.start()
 
     def add_indicator(self) -> None:
         """
         Adds indicator from list for GUI listbox and local storage
         """
 
-        Indicator(parent=self.parent).add_indicator()
-        self.load_indicators()
+        if self.login.logged_in:
+            indicator = Indicator(parent=self.parent, login=self.login)
+            indicator.add_indicator()
+
+        loading_thread = threading.Thread(target=self.load_indicators())
+        loading_thread.start()
 
     def remove_indicator(self) -> None:
         """
@@ -166,7 +153,7 @@ class EditIndicatorsPage(tk.Frame):
 
             self.listbox_indicators.delete(first=0, last=tk.END)
 
-            for index, indicator in enumerate(self.indicators, start=1):
+            for index, indicator in enumerate(iterable=self.indicators, start=1):
                 indicator_text: str = f"{index}.     {indicator['name']}"
                 self.listbox_indicators.insert(tk.END, indicator_text)
 
