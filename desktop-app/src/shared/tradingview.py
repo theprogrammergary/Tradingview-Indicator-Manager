@@ -2,9 +2,11 @@
 Tradingview Manage Private Script Access API
 """
 
-# standard imports
 import json
+
+# standard imports
 import tkinter as tk
+from tkinter import ttk
 from typing import Any
 
 import requests
@@ -17,7 +19,7 @@ from shared.config import (
     USER_ACCESS_LIST_URL,
     logger,
 )
-from shared.login import TradingviewLogin
+from shared.login import Login
 from urllib3 import encode_multipart_formdata  # pylint: disable=C0411
 
 
@@ -26,18 +28,11 @@ class Tradingview(tk.Frame):
     API for Managing Private Indicators on Tradingview
     """
 
-    def __init__(self, parent: tk.Tk) -> None:
+    def __init__(self, parent: ttk.Frame, login: Login) -> None:
         super().__init__(master=parent)
-        self.parent: tk.Tk = parent
-        self.login()
-
-    def login(self) -> None:
-        """
-        Ensures current session ID is valid or prompts user to re-login to capture
-        a new session ID cookie
-        """
-        self.tradingview_login = TradingviewLogin(parent=self.parent)
-        self.session_id: str | None = self.tradingview_login.read_saved_session_id()
+        self.parent: ttk.Frame = parent
+        self.login: Login = login
+        self.session_id: str | None = self.login.session_id
 
     def add(self, username: str, pine_id: str) -> str:
         """
@@ -58,7 +53,7 @@ class Tradingview(tk.Frame):
                 "noExpiration": True,
             }
 
-            _, content_type = encode_multipart_formdata(fields=payload)
+            body, content_type = encode_multipart_formdata(fields=payload)
 
             headers: dict[str, str] = {
                 "origin": "https://www.tradingview.com",
@@ -66,17 +61,17 @@ class Tradingview(tk.Frame):
                 "cookie": (f"sessionid={self.session_id}"),
             }
 
-            add_request: Response = requests.post(
-                url=ADD_ACCESS_URL, headers=headers, timeout=5000
+            response: Response = requests.post(
+                url=ADD_ACCESS_URL, headers=headers, data=body, timeout=5000
             )
 
-            if add_request.status_code == 200:
+            if response.status_code == 200:
                 return f"    ✅ ALREADY HAD ACCESS: {username}"
 
-            elif add_request.status_code == 201:
+            elif response.status_code == 201:
                 return f"    ✅ ADDED: {username}"
 
-            elif add_request.status_code == 422:
+            elif response.status_code == 422:
                 return f"    ❌ TV USERNAME NOT VALID: {username}"
 
             else:
@@ -112,7 +107,7 @@ class Tradingview(tk.Frame):
                 "noExpiration": True,
             }
 
-            _, content_type = encode_multipart_formdata(fields=payload)
+            body, content_type = encode_multipart_formdata(fields=payload)
 
             headers: dict[str, str] = {
                 "origin": "https://www.tradingview.com",
@@ -120,14 +115,14 @@ class Tradingview(tk.Frame):
                 "cookie": (f"sessionid={self.session_id}"),
             }
 
-            remove_request: Response = requests.post(
-                url=REMOVE_ACCESS_URL, headers=headers, timeout=5000
+            response: Response = requests.post(
+                url=REMOVE_ACCESS_URL, headers=headers, data=body, timeout=5000
             )
 
-            if remove_request.status_code == 200 or remove_request.status_code == 201:
+            if response.status_code == 200 or response.status_code == 201:
                 return f"    ✅ REMOVED: {username}"
 
-            elif remove_request.status_code == 422:
+            elif response.status_code == 422:
                 return f"    ❌ TV USERNAME NOT VALID: {username}"
 
             else:
@@ -162,20 +157,19 @@ class Tradingview(tk.Frame):
                 "username_recip": username,
             }
 
-            _, content_type = encode_multipart_formdata(fields=payload)
-
             headers: dict[str, str] = {
                 "origin": "https://www.tradingview.com",
-                "Content-Type": content_type,
+                "Content-Type": "application/x-www-form-urlencoded",
                 "cookie": (f"sessionid={self.session_id}"),
             }
 
-            request: Response = requests.post(
-                url=USER_ACCESS_LIST_URL, headers=headers, timeout=5000
+            response: Response = requests.post(
+                url=USER_ACCESS_LIST_URL, headers=headers, data=payload, timeout=5000
             )
 
-            request_json = request.json()
-            current_access_list = request_json["results"]
+            response_json = response.json()
+
+            current_access_list = response_json["results"]
             has_access = False
 
             for user in current_access_list:
@@ -229,21 +223,21 @@ class Tradingview(tk.Frame):
             next_url = "/pine_perm/list_users/?limit=10&order_by=user__username"
 
             while next_url is not None:
-                request: Response = requests.post(
+                response: Response = requests.post(
                     url=("https://www.tradingview.com" + next_url),
                     data=body,
                     headers=headers,
                     timeout=5000,
                 )
-                request_json: Any = json.loads(s=request.content)
-                body_dict: dict = request_json["results"]
+                response_json: Any = json.loads(s=response.content)
+                body_dict: dict = response_json["results"]
 
                 for user in body_dict:
                     user_count += 1
                     user_list.append(user["username"].lower())
 
-                if "next" in request_json:
-                    next_url: str = request_json["next"]
+                if "next" in response_json:
+                    next_url: str = response_json["next"]
                     counter += 1
 
                 else:

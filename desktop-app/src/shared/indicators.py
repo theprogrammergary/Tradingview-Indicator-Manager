@@ -24,7 +24,7 @@ from shared.config import (
     PINE_NAME_SELECTOR,
     logger,
 )
-from shared.login import TradingviewLogin
+from shared.login import Login
 
 
 class Indicator(tk.Frame):
@@ -32,10 +32,10 @@ class Indicator(tk.Frame):
     Handles adding indicators to the indicators.json list
     """
 
-    def __init__(self, parent: tk.Tk) -> None:
+    def __init__(self, parent: ttk.Frame, login: Login) -> None:
         super().__init__(master=parent)
-        self.parent: tk.Tk = parent
-        self.tradingview_login = TradingviewLogin(parent=self.parent)
+        self.parent: ttk.Frame = parent
+        self.login: Login = login
 
     def add_indicator(self) -> None:
         """
@@ -158,7 +158,7 @@ class Indicator(tk.Frame):
             WebDriver | None: A Selenium Web Driver
         """
 
-        web_driver: WebDriver | None = self.tradingview_login.create_selenium_webdriver(
+        web_driver: WebDriver | None = self.login.create_selenium_webdriver(
             headless=True
         )
 
@@ -172,7 +172,7 @@ class Indicator(tk.Frame):
             )
             return
 
-        session_id: str | None = self.tradingview_login.read_saved_session_id()
+        session_id: str | None = self.login.read_saved_session_id()
 
         web_driver.get(url="https://www.tradingview.com/u/#published-scripts")
 
@@ -218,7 +218,7 @@ class Indicator(tk.Frame):
         ok_button = ttk.Button(master=dialog, text="OK", command=get_input)
         ok_button.place(relx=0.5, rely=0.72, relwidth=0.3, anchor="center")
 
-        dialog.transient(master=self.parent)
+        # dialog.transient(master=self.parent)
         dialog.grab_set()
         self.parent.wait_window(window=dialog)
 

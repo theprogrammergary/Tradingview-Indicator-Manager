@@ -6,12 +6,14 @@ Handles verifying/creating tradingview login session ID
 import json
 import time
 import tkinter as tk
+from json.decoder import JSONDecodeError
 from tkinter import messagebox
 from typing import Any, List
 
 import chromedriver_autoinstaller
 import requests
 from requests import Response
+from selenium.common.exceptions import NoSuchWindowException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.webdriver import WebDriver
 
@@ -25,7 +27,7 @@ from shared.config import (
 )
 
 
-class TradingviewLogin(tk.Frame):
+class Login(tk.Frame):
     """
     Handles verifying/creating tradingview login session ID
     """
@@ -33,7 +35,9 @@ class TradingviewLogin(tk.Frame):
     def __init__(self, parent: tk.Tk) -> None:
         super().__init__(master=parent)
         self.parent: tk.Tk = parent
-        self.login()
+
+        self.session_id: str | None = None
+        self.logged_in: bool = self.login()
 
     def login(self) -> bool:
         """
@@ -43,12 +47,18 @@ class TradingviewLogin(tk.Frame):
             bool: Is a valid session ID set?
         """
 
-        session_id: str | None = self.read_saved_session_id()
+        self.session_id: str | None = self.read_saved_session_id()
 
-        if session_id is None or not self.validate_session_id(session_id=session_id):
-            user_login_status: int = self.user_tradingview_login()
+        if self.session_id is None or not self.validate_session_id(
+            session_id=self.session_id
+        ):
+            try:
+                user_login_status: int = self.user_tradingview_login()
 
-            return user_login_status == 0
+                return user_login_status == 0
+
+            except NoSuchWindowException:
+                return False
 
         return True
 
@@ -76,7 +86,10 @@ class TradingviewLogin(tk.Frame):
             with open(file=SESSION_FILE, mode="r", encoding="utf-8") as file:
                 data: dict[str, str] = json.load(fp=file)
                 return data.get("session_id")
+
         except FileNotFoundError:
+            return None
+        except JSONDecodeError:
             return None
 
     def create_selenium_webdriver(self, headless: bool) -> WebDriver | None:
@@ -126,9 +139,11 @@ class TradingviewLogin(tk.Frame):
 
         def update_message_box_countdown(message_box, max_duration, start_time) -> None:
             time.sleep(1)
-            time_remaining: int = round(max_duration - (time.time() - start_time))
+            time_remaining: int = round(
+                number=max_duration - (time.time() - start_time)
+            )
             new_msg: str = (
-                f"Waiting for Tradingview Session ID...\n\n"
+                f"Please Login\n\nWaiting for Tradingview Session ID...\n"
                 f"Time Remaining to Login {time_remaining}"
             )
 
@@ -137,8 +152,13 @@ class TradingviewLogin(tk.Frame):
                 new_msg=new_msg,
             )
 
+        msg: str = (
+            f"Please Login\n\nWaiting for Tradingview Session ID...\n"
+            f"Time Remaining to Login {180}"
+        )
         searching_message_box: tk.Toplevel = self.create_message_box(
-            title="Tradingview Login", msg="Waiting for Tradingview Session ID..."
+            title="Tradingview Login",
+            msg=msg,
         )
 
         start_time: float = time.time()
