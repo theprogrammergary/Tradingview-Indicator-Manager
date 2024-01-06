@@ -46,9 +46,7 @@ class ListPage(tk.Frame):
             master=self,
             text="UPLOAD LIST",
             style="xl.primary.TButton",
-            command=lambda: threading.Thread(
-                target=lambda: self.list_management()
-            ).start(),
+            command=lambda: threading.Thread(target=self.list_management()).start(),
         )
 
         button_upload.place(
