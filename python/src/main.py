@@ -47,7 +47,7 @@ class MainApplication(tk.Tk):
 
         # Create GUI name/styling
         self.title(string=GUI_NAME)
-        icon_path: str = os.path.join(RUNTIME_PATH, "..", ".setup", "tv_round.png")
+        icon_path: str = os.path.join(RUNTIME_PATH, ".setup", "logo.png")
         icon = tk.PhotoImage(file=icon_path)
         self.iconphoto(True, icon)
 
