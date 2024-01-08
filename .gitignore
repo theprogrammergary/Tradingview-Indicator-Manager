@@ -1,11 +1,13 @@
-# chrome-extension
-node_modules/
-dist/
-
-# desktop-app
+# python
 .venv
+app/
 __pycache__/
 *.DS_Store
 login.json
 desktop-app/.DS_Store
 *.log
+
+# typescript-chrome-extension
+node_modules/
+dist/
+
