@@ -17,7 +17,7 @@ import ttkbootstrap as ttk
 from pages.edit_indicators import EditIndicatorsPage
 from pages.manage_list import ListPage
 from pages.manage_single import SingleUserPage
-from shared.config import GUI_HEIGHT, GUI_NAME, GUI_WIDTH, RUNTIME_PATH
+from shared.config import GUI_HEIGHT, GUI_NAME, GUI_WIDTH, RUNTIME_PATH, logger
 from shared.login import Login
 
 
@@ -53,10 +53,12 @@ class MainApplication(tk.Tk):
 
         self.login = Login(parent=self)
         if self.login.logged_in:
+            logger.info("Login Success!")
             self.create_ui()
 
         else:
             self.withdraw()
+            logger.error("Login Failed")
             messagebox.showerror(
                 title="Login Failed",
                 message="Please login to Tradingview to use the app.",

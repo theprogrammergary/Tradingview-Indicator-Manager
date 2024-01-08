@@ -82,8 +82,13 @@ class Indicator(tk.Frame):
             new_entry (dict[str, str | None]): New indicator info
         """
 
-        with open(file=INDICATORS_FILE, mode="r", encoding="utf-8") as file:
-            data: Any = json.load(fp=file)
+        data: list[dict] = []
+
+        try:
+            with open(file=INDICATORS_FILE, mode="r", encoding="utf-8") as file:
+                data = json.load(fp=file)
+        except FileNotFoundError:
+            logger.error("INDICATORS_FILE not found")
 
         data.append(new_entry)
 

@@ -158,4 +158,4 @@ class EditIndicatorsPage(tk.Frame):
                 self.listbox_indicators.insert(tk.END, indicator_text)
 
         except FileNotFoundError:
-            logger.info("No indicators.json file found")
+            logger.error("No indicators.json file found")

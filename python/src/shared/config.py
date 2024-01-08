@@ -5,12 +5,7 @@ Loads environment vars from .env file
 # imports
 import os
 
-# from dotenv import load_dotenv
 from loguru import logger
-
-# environment vars
-# load_dotenv(dotenv_path=os.path.join(os.getcwd(), ".setup", ".env"))
-
 
 # global vars
 RUNTIME_PATH: str = os.path.join(
@@ -53,7 +48,7 @@ PINE_ID_SELECTOR: str = (
 # logger
 logger.remove()
 logger.add(
-    sink="./desktop-app/logs/{time:YYYY-MM-DD}.log",
+    sink="./python/logs/{time:YYYY-MM-DD}.log",
     rotation="00:00",
     retention="14 days",
     backtrace=True,

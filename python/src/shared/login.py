@@ -2,8 +2,10 @@
 Handles verifying/creating tradingview login session ID
 """
 
+
 # standard imports
 import json
+import sys
 import time
 import tkinter as tk
 from json.decoder import JSONDecodeError
@@ -309,18 +311,30 @@ class Login(tk.Frame):
         Changes the text of the custom message box
         """
 
-        for widget in message_box.winfo_children():
-            widget.destroy()
+        try:
+            for widget in message_box.winfo_children():
+                widget.destroy()
 
-        message_label = tk.Label(
-            master=message_box,
-            text=new_msg,
-            font=(None, 16),
-        )
+            message_label = tk.Label(
+                master=message_box,
+                text=new_msg,
+                font=(None, 16),
+            )
 
-        message_label.place(relx=0.5, rely=0.5, anchor="center")
+            message_label.place(relx=0.5, rely=0.5, anchor="center")
 
-        message_box.update()
+            message_box.update()
+
+        except tk.TclError:
+            logger.error("Window was closed during User Tradingview Login")
+            messagebox.showerror(
+                title="Error",
+                message=(
+                    "Error During Tradingview Login"
+                    "\n\nPlease don't close any windows."
+                ),
+            )
+            sys.exit(2)
 
     def close_message_box(self, message_box: tk.Toplevel) -> None:
         """
