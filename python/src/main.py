@@ -8,17 +8,23 @@ Tradingview Indicator Access Management Program
 
 # standard imports
 import os
+import platform
 import threading
 import tkinter as tk
 from tkinter import messagebox
 
 # custom imports
-import ttkbootstrap as ttk
 from pages.edit_indicators import EditIndicatorsPage
 from pages.manage_list import ListPage
 from pages.manage_single import SingleUserPage
 from shared.config import GUI_HEIGHT, GUI_NAME, GUI_WIDTH, RUNTIME_PATH, logger
 from shared.login import Login
+
+# system specific imports
+if platform.system() == "Linux":
+    from tkinter import ttk
+else:
+    import ttkbootstrap as ttk
 
 
 class MainApplication(tk.Tk):
@@ -30,7 +36,7 @@ class MainApplication(tk.Tk):
         super().__init__()
 
         # Create GUI styles
-        style = ttk.Style(theme="darkly")
+        style = ttk.Style()
         style.configure(style="edit.primary.TButton", font=(None, 18))
         style.configure(style="xl.primary.TButton", font=(None, 35), justify="center")
         style.configure(style="medium.primary.TButton", font=(None, 16))
