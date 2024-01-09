@@ -32,7 +32,7 @@ class MainApplication(tk.Tk):
         # Create GUI styles
         style = ttk.Style(theme="darkly")
         style.configure(style="edit.primary.TButton", font=(None, 18))
-        style.configure(style="xl.primary.TButton", font=(None, 35))
+        style.configure(style="xl.primary.TButton", font=(None, 35), justify="center")
         style.configure(style="medium.primary.TButton", font=(None, 16))
         style.configure(style="upload.primary.TButton", font=(None, 16))
 
