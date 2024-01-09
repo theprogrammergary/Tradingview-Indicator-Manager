@@ -103,7 +103,6 @@ class BuildApp:
             "-nTradingvview Indicator Access Management",
             "--onefile",
             "--windowed",
-            "--uac-admin",
             "--distpath",
             output_dir,
             entry_path,
