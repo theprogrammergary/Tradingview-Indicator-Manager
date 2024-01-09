@@ -72,7 +72,7 @@ class EditIndicatorsPage(tk.Frame):
         # Create Add button
         button_add = ttk.Button(
             master=self.parent,
-            text="     Add\nIndicator",
+            text="Add\nIndicator",
             style="xl.primary.TButton",
             command=self.add_indicator,
         )
