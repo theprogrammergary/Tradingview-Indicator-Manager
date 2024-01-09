@@ -36,7 +36,11 @@ class MainApplication(tk.Tk):
         super().__init__()
 
         # Create GUI styles
-        style = ttk.Style()
+        if platform.system() == "Linux":
+            style = ttk.Style()
+        else:
+            style = ttk.Style(theme="darkly")  # type: ignore # pylint:disable = E1123
+
         style.configure(style="edit.primary.TButton", font=(None, 18))
         style.configure(style="xl.primary.TButton", font=(None, 35), justify="center")
         style.configure(style="medium.primary.TButton", font=(None, 16))
