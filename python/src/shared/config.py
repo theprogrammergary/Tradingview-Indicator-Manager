@@ -10,6 +10,11 @@ from loguru import logger
 
 
 def get_base_system_dir() -> str:
+    """
+    Returns:
+        str: Where app should store user files locally.
+    """
+
     system: str = platform.system()
 
     if system == "Darwin":
@@ -92,9 +97,9 @@ logger.add(
 
 
 # debug paths
-print(f"RUNTIME: {RUNTIME_PATH}\n")
-print(f"LOGGER: {LOG_PATH}\n")
-print(f"SESSION_FILE: {SESSION_FILE}\n")
-print(f"INDICATORS_FILE: {INDICATORS_FILE}")
+# print(f"RUNTIME: {RUNTIME_PATH}\n")
+# print(f"LOGGER: {LOG_PATH}\n")
+# print(f"SESSION_FILE: {SESSION_FILE}\n")
+# print(f"INDICATORS_FILE: {INDICATORS_FILE}")
 
-print("\n\n\n\n")
+# print("\n\n\n\n")

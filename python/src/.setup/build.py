@@ -1,3 +1,7 @@
+"""
+Python build script for creating a pyinstaller GUI app.
+"""
+
 import os
 import platform
 import shutil
@@ -5,6 +9,10 @@ import subprocess
 
 
 class BuildApp:
+    """
+    Buils pyinstaller GUI application
+    """
+
     def __init__(self) -> None:
         self.system: str = platform.system()
 
@@ -14,34 +22,41 @@ class BuildApp:
         elif self.system == "Windows":
             self.windows()
 
+        elif self.system == "Linux":
+            self.mac_os()
+
         else:
-            print("BUILD FAILED: System not recognized")
+            print(f"BUILD FAILED: System={self.system} not recognized")
 
     def mac_os(self) -> None:
-        CWD: str = os.path.join(os.path.dirname(p=os.path.abspath(path=__file__)), "..")
+        """
+        Build MAC OS GUI
+        """
 
-        OUTPUT_DIR: str = os.path.join(CWD, "..", "app")
+        cwd: str = os.path.join(os.path.dirname(p=os.path.abspath(path=__file__)), "..")
 
-        ENTRY_PATH: str = os.path.join(CWD, "main.py")
+        output_dir: str = os.path.join(cwd, "..", "app")
 
-        PNG_PATH: str = os.path.join(CWD, ".setup", "logo.png")
-        ICO_PATH: str = os.path.join(CWD, ".setup", "logo.ico")
+        entry_path: str = os.path.join(cwd, "main.py")
 
-        BUILD_DIR = "build"
+        png_path: str = os.path.join(cwd, ".setup", "logo.png")
+        ico_path: str = os.path.join(cwd, ".setup", "logo.ico")
+
+        build_dir = "build"
         # DIST_DIR = "dist"
 
         pyinstaller_command: list[str] = [
             "pyinstaller",
-            f"--add-data={PNG_PATH}:./.setup/",
-            f"--add-data={ICO_PATH}:./.setup/",
-            f"--icon={PNG_PATH}",
+            f"--add-data={png_path}:./.setup/",
+            f"--add-data={ico_path}:./.setup/",
+            f"--icon={png_path}",
             "-nTradingvview Indicator Access Management",
             "--onefile",
             "--windowed",
             "--uac-admin",
             "--distpath",
-            OUTPUT_DIR,
-            ENTRY_PATH,
+            output_dir,
+            entry_path,
         ]
 
         try:
@@ -49,7 +64,7 @@ class BuildApp:
             print("PyInstaller build completed successfully.")
 
             try:
-                shutil.rmtree(BUILD_DIR, ignore_errors=True)
+                shutil.rmtree(build_dir, ignore_errors=True)
                 os.remove(
                     path=os.path.join(
                         os.getcwd(), "Tradingvview Indicator Access Management.spec"
@@ -57,37 +72,41 @@ class BuildApp:
                 )
                 print("\nBuild files cleaned up successfully.")
 
-            except Exception as e:
+            except Exception as e:  # pylint:disable = W0718
                 print(f"Error: {e}")
 
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
 
     def windows(self) -> None:
-        CWD: str = os.path.join(os.path.dirname(p=os.path.abspath(path=__file__)), "..")
+        """
+        Build WIN GUI
+        """
 
-        OUTPUT_DIR: str = os.path.join(CWD, "..", "app")
+        cwd: str = os.path.join(os.path.dirname(p=os.path.abspath(path=__file__)), "..")
 
-        ENTRY_PATH: str = os.path.join(CWD, "main.py")
+        output_dir: str = os.path.join(cwd, "..", "app")
 
-        PNG_PATH: str = os.path.join(CWD, ".setup", "logo.png")
-        ICO_PATH: str = os.path.join(CWD, ".setup", "logo.ico")
+        entry_path: str = os.path.join(cwd, "main.py")
 
-        BUILD_DIR = "build"
+        png_path: str = os.path.join(cwd, ".setup", "logo.png")
+        ico_path: str = os.path.join(cwd, ".setup", "logo.ico")
+
+        build_dir = "build"
         # DIST_DIR = "dist"
 
         pyinstaller_command: list[str] = [
             "pyinstaller",
-            f"--add-data={PNG_PATH}:./.setup/",
-            f"--add-data={ICO_PATH}:./.setup/",
-            f"--icon={ICO_PATH}",
+            f"--add-data={png_path}:./.setup/",
+            f"--add-data={ico_path}:./.setup/",
+            f"--icon={ico_path}",
             "-nTradingvview Indicator Access Management",
             "--onefile",
             "--windowed",
             "--uac-admin",
             "--distpath",
-            OUTPUT_DIR,
-            ENTRY_PATH,
+            output_dir,
+            entry_path,
         ]
 
         try:
@@ -95,7 +114,7 @@ class BuildApp:
             print("PyInstaller build completed successfully.")
 
             try:
-                shutil.rmtree(BUILD_DIR, ignore_errors=True)
+                shutil.rmtree(build_dir, ignore_errors=True)
                 os.remove(
                     path=os.path.join(
                         os.getcwd(), "Tradingvview Indicator Access Management.spec"
@@ -103,7 +122,7 @@ class BuildApp:
                 )
                 print("\nBuild files cleaned up successfully.")
 
-            except Exception as e:
+            except Exception as e:  # pylint:disable = W0718
                 print(f"Error: {e}")
 
         except subprocess.CalledProcessError as e:
