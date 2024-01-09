@@ -55,7 +55,7 @@ class SingleUserPage(tk.Frame):
         )
 
         input_username.place(
-            relx=0.5, rely=0.2, anchor=tk.CENTER, relheight=0.05, relwidth=0.5
+            relx=0.5, rely=0.22, anchor=tk.CENTER, relheight=0.065, relwidth=0.5
         )
 
         # Create add, check, & remove access button
@@ -87,13 +87,13 @@ class SingleUserPage(tk.Frame):
         )
 
         button_add.place(
-            relx=0.25, rely=0.265, relwidth=0.24, relheight=0.05, anchor=tk.CENTER
+            relx=0.25, rely=0.29, relwidth=0.24, relheight=0.05, anchor=tk.CENTER
         )
         button_check.place(
-            relx=0.5, rely=0.265, relwidth=0.24, relheight=0.05, anchor=tk.CENTER
+            relx=0.5, rely=0.29, relwidth=0.24, relheight=0.05, anchor=tk.CENTER
         )
         button_remove.place(
-            relx=0.75, rely=0.265, relwidth=0.24, relheight=0.05, anchor=tk.CENTER
+            relx=0.75, rely=0.29, relwidth=0.24, relheight=0.05, anchor=tk.CENTER
         )
 
         # Create output textbox
