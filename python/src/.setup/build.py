@@ -50,10 +50,9 @@ class BuildApp:
             f"--add-data={png_path}:./.setup/",
             f"--add-data={ico_path}:./.setup/",
             f"--icon={png_path}",
-            "-nTradingvview Indicator Access Management",
+            "-nTradingview Indicator Access Management",
             "--onefile",
             "--windowed",
-            "--uac-admin",
             "--distpath",
             output_dir,
             entry_path,
@@ -67,7 +66,7 @@ class BuildApp:
                 shutil.rmtree(build_dir, ignore_errors=True)
                 os.remove(
                     path=os.path.join(
-                        os.getcwd(), "Tradingvview Indicator Access Management.spec"
+                        os.getcwd(), "Tradingview Indicator Access Management.spec"
                     )
                 )
                 print("\nBuild files cleaned up successfully.")
