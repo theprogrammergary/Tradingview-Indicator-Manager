@@ -11,7 +11,7 @@ from typing import Any
 
 # custom imports
 from shared.config import INDICATORS_FILE, logger
-from shared.indicators import Indicator
+from shared.indicator import Indicator
 from shared.login import Login
 
 
@@ -27,6 +27,7 @@ class EditIndicatorsPage(tk.Frame):
         super().__init__(master=parent)
         self.parent: ttk.Frame = parent
         self.login: Login = login
+        self.indicator: Indicator = Indicator(parent=self.parent, login=self.login)
 
         self.pack(fill="both", expand=True)
 
@@ -102,11 +103,13 @@ class EditIndicatorsPage(tk.Frame):
         """
 
         if self.login.logged_in:
-            indicator = Indicator(parent=self.parent, login=self.login)
-            indicator.add_indicator()
+            adding_thread = threading.Thread(target=self.indicator.add_indicator())
+            adding_thread.start()
+            adding_thread.join()
 
         loading_thread = threading.Thread(target=self.load_indicators())
         loading_thread.start()
+        loading_thread.join()
 
     def remove_indicator(self) -> None:
         """
