@@ -6,7 +6,6 @@ Handles adding indicators to the indicators.json list
 import json
 import tkinter as tk
 from tkinter import messagebox, ttk
-from typing import Any
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -46,33 +45,49 @@ class Indicator(tk.Frame):
         if url is None:
             return
 
+        message_box: tk.Toplevel | None = None
         web_driver: WebDriver | None = self.create_browser()
-        if web_driver is None:
-            return
 
-        valid_url: bool = url.startswith("https://www.tradingview.com/script")
-
-        if valid_url:
-            pine_name: str | None = None
-            pine_id: str | None = None
-
-            pine_name, pine_id = self.get_pine_info(url=url, web_driver=web_driver)
-
-            valid_pine_info: bool = (
-                pine_name is not None
-                and pine_id is not None
-                and pine_name != ""
-                and pine_id != ""
+        try:
+            message_box = self.create_message_box(
+                title="Fetching Info", msg="Fetching Indicator Info. Please wait."
             )
 
-            if valid_pine_info:
-                new_entry: dict[str, str | None] = {
-                    "name": pine_name,
-                    "url": url,
-                    "id": pine_id,
-                }
+            if web_driver is None:
+                return
 
-                self.update_json_list(new_entry=new_entry)
+            valid_url: bool = url.startswith("https://www.tradingview.com/script")
+
+            if valid_url:
+                pine_name: str | None = None
+                pine_id: str | None = None
+
+                pine_name, pine_id = self.get_pine_info(url=url, web_driver=web_driver)
+
+                print(pine_name)
+                print(pine_id)
+                valid_pine_info: bool = (
+                    pine_name is not None
+                    and pine_id is not None
+                    and pine_name != ""
+                    and pine_id != ""
+                )
+
+                if valid_pine_info:
+                    new_entry: dict[str, str | None] = {
+                        "name": pine_name,
+                        "url": url,
+                        "id": pine_id,
+                    }
+
+                    self.update_json_list(new_entry=new_entry)
+
+        finally:
+            # if web_driver is not None:
+            # web_driver.quit()
+
+            if message_box is not None:
+                message_box.destroy()
 
     def update_json_list(self, new_entry: dict[str, str | None]) -> None:
         """
@@ -163,9 +178,7 @@ class Indicator(tk.Frame):
             WebDriver | None: A Selenium Web Driver
         """
 
-        web_driver: WebDriver | None = self.login.create_selenium_webdriver(
-            headless=True
-        )
+        web_driver: WebDriver | None = self.login.headless_web
 
         if web_driver is None:
             messagebox.showerror(
@@ -175,7 +188,7 @@ class Indicator(tk.Frame):
                     "that you have Google Chrome installed."
                 ),
             )
-            return
+            return None
 
         session_id: str | None = self.login.read_saved_session_id()
 
@@ -219,6 +232,9 @@ class Indicator(tk.Frame):
 
         entry = ttk.Entry(master=dialog)
         entry.place(relx=0.5, rely=0.3, relheight=0.35, relwidth=0.95, anchor="center")
+        entry.insert(
+            0, "https://www.tradingview.com/script/fllPsRHH-Testing-Invite-Only/"
+        )
 
         ok_button = ttk.Button(master=dialog, text="OK", command=get_input)
         ok_button.place(relx=0.5, rely=0.72, relwidth=0.3, anchor="center")
@@ -228,3 +244,36 @@ class Indicator(tk.Frame):
         self.parent.wait_window(window=dialog)
 
         return entered_url.get()
+
+    def create_message_box(self, title: str, msg: str) -> tk.Toplevel:
+        """
+        Shows a custom message box
+        """
+
+        # Create message box
+        message_box = tk.Toplevel(master=self.parent)
+        screen_width: int = message_box.winfo_screenwidth()
+        screen_height: int = message_box.winfo_screenheight()
+        height_offset: int = int(message_box.winfo_screenheight() * 0.2)
+        x: int = int((screen_width - MESSAGE_WIDTH) // 2)
+        y: int = int(((screen_height - MESSAGE_HEIGHT) // 2) - height_offset)
+
+        message_box.attributes("-topmost", True)
+        message_box.resizable(width=False, height=False)
+        message_box.title(string=title)
+        message_box.geometry(newGeometry=f"{MESSAGE_WIDTH}x{MESSAGE_HEIGHT}+{x}+{y}")
+
+        # Create message
+        message_label = tk.Label(
+            master=message_box,
+            text=msg,
+            font=(None, 16),
+        )
+
+        message_label.place(relx=0.5, rely=0.5, anchor="center")
+
+        # self.parent.withdraw()
+        message_box.lift()
+        message_box.update()
+
+        return message_box
