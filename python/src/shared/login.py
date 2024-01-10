@@ -18,15 +18,9 @@ from requests import Response
 from selenium.common.exceptions import NoSuchWindowException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.webdriver import WebDriver
-
 # custom imports
-from shared.config import (
-    LOGIN_CHECK_URL,
-    MESSAGE_HEIGHT,
-    MESSAGE_WIDTH,
-    SESSION_FILE,
-    logger,
-)
+from shared.config import (LOGIN_CHECK_URL, MESSAGE_HEIGHT, MESSAGE_WIDTH,
+                           SESSION_FILE, logger)
 
 
 class Login(tk.Frame):
@@ -40,6 +34,11 @@ class Login(tk.Frame):
 
         self.session_id: str | None = None
         self.logged_in: bool = self.login()
+
+        self.headless_web: WebDriver | None = self.create_selenium_webdriver(
+            headless=True
+        )
+
 
     def login(self) -> bool:
         """
@@ -101,13 +100,12 @@ class Login(tk.Frame):
             WebDriver: Webdriver for user login
         """
 
+        web_driver: WebDriver | None = None
         options = Options()
-        options.add_argument(argument="--window-size=1920,1200")
+        options.add_argument(argument="--window-size=1920,1080")
         options.add_argument(argument="--disable-blink-features=AutomationControlled")
         if headless:
             options.add_argument(argument="--headless")
-
-        web_driver: WebDriver | None = None
 
         try:
             web_driver = WebDriver(options=options)
