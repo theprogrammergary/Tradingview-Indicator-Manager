@@ -32,7 +32,7 @@ class BuildApp:
             self.ico_path if self.system == "Windows" else self.png_path
         )
 
-        if self.system in ["Darwin", "Linux"]:
+        if self.system in ["Darwin", "Linux", "Windows"]:
             self.build()
         else:
             print(f"BUILD FAILED: System={self.system} not recognized")
@@ -44,6 +44,8 @@ class BuildApp:
 
         pyinstaller_command: list[str] = [
             "pyinstaller",
+            f"--add-data={self.png_path}:./.setup/",
+            f"--add-data={self.ico_path}:./.setup/",
             f"--icon={self.icon_path}",
             "-nTradingview Indicator Access Management",
             "--onefile",

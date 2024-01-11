@@ -41,6 +41,12 @@ class MainApplication(tk.Tk):
         else:
             style = ttk.Style(theme="darkly")  # type: ignore # pylint:disable = E1123
 
+        # Set GUI icon
+        if platform.system() in ["Linux", "Windows"]:
+            icon_path: str = os.path.join(RUNTIME_PATH, ".setup", "logo.png")
+            icon = tk.PhotoImage(file=icon_path)
+            self.iconphoto(True, icon)
+
         style.configure(style="edit.primary.TButton", font=(None, 18))
         style.configure(style="xl.primary.TButton", font=(None, 35), justify="center")
         style.configure(style="medium.primary.TButton", font=(None, 16))
@@ -57,9 +63,6 @@ class MainApplication(tk.Tk):
 
         # Create GUI name/styling
         self.title(string=GUI_NAME)
-        # icon_path: str = os.path.join(RUNTIME_PATH, ".setup", "logo.png")
-        # icon = tk.PhotoImage(file=icon_path)
-        # self.iconphoto(True, icon)
 
         self.login = Login(parent=self)
         if self.login.logged_in:
