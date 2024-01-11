@@ -11,3 +11,4 @@ desktop-app/.DS_Store
 node_modules/
 dist/
 
+python/src/.setup/logo.zip
