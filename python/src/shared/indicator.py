@@ -64,8 +64,6 @@ class Indicator(tk.Frame):
 
                 pine_name, pine_id = self.get_pine_info(url=url, web_driver=web_driver)
 
-                print(pine_name)
-                print(pine_id)
                 valid_pine_info: bool = (
                     pine_name is not None
                     and pine_id is not None
