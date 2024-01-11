@@ -14,48 +14,43 @@ class BuildApp:
     """
 
     def __init__(self) -> None:
+        self.cwd: str = os.path.join(
+            os.path.dirname(p=os.path.abspath(path=__file__)), ".."
+        )
+
+        self.output_dir: str = os.path.join(self.cwd, "..", "app")
+        self.entry_path: str = os.path.join(self.cwd, "main.py")
+
+        self.png_path: str = os.path.join(self.cwd, ".setup", "logo.png")
+        self.ico_path: str = os.path.join(self.cwd, ".setup", "logo.ico")
+        self.icns_path: str = os.path.join(self.cwd, ".setup", "logo.icns")
+
+        self.build_dir = "build"
+
         self.system: str = platform.system()
+        self.icon_path: str = (
+            self.ico_path if self.system == "Windows" else self.png_path
+        )
 
-        if self.system == "Darwin":
-            self.mac_os()
-
-        elif self.system == "Windows":
-            self.windows()
-
-        elif self.system == "Linux":
-            self.mac_os()
-
+        if self.system in ["Darwin", "Linux"]:
+            self.build()
         else:
             print(f"BUILD FAILED: System={self.system} not recognized")
 
-    def mac_os(self) -> None:
+    def build(self) -> None:
         """
-        Build MAC OS GUI
+        Build PyInstaller GUI
         """
-
-        cwd: str = os.path.join(os.path.dirname(p=os.path.abspath(path=__file__)), "..")
-
-        output_dir: str = os.path.join(cwd, "..", "app")
-
-        entry_path: str = os.path.join(cwd, "main.py")
-
-        png_path: str = os.path.join(cwd, ".setup", "logo.png")
-        ico_path: str = os.path.join(cwd, ".setup", "logo.ico")
-
-        build_dir = "build"
-        # DIST_DIR = "dist"
 
         pyinstaller_command: list[str] = [
             "pyinstaller",
-            f"--add-data={png_path}:./.setup/",
-            f"--add-data={ico_path}:./.setup/",
-            f"--icon={png_path}",
+            f"--icon={self.icon_path}",
             "-nTradingview Indicator Access Management",
             "--onefile",
             "--windowed",
             "--distpath",
-            output_dir,
-            entry_path,
+            self.output_dir,
+            self.entry_path,
         ]
 
         try:
@@ -63,59 +58,10 @@ class BuildApp:
             print("PyInstaller build completed successfully.")
 
             try:
-                shutil.rmtree(build_dir, ignore_errors=True)
+                shutil.rmtree(self.build_dir, ignore_errors=True)
                 os.remove(
                     path=os.path.join(
                         os.getcwd(), "Tradingview Indicator Access Management.spec"
-                    )
-                )
-                print("\nBuild files cleaned up successfully.")
-
-            except Exception as e:  # pylint:disable = W0718
-                print(f"Error: {e}")
-
-        except subprocess.CalledProcessError as e:
-            print(f"Error: {e}")
-
-    def windows(self) -> None:
-        """
-        Build WIN GUI
-        """
-
-        cwd: str = os.path.join(os.path.dirname(p=os.path.abspath(path=__file__)), "..")
-
-        output_dir: str = os.path.join(cwd, "..", "app")
-
-        entry_path: str = os.path.join(cwd, "main.py")
-
-        png_path: str = os.path.join(cwd, ".setup", "logo.png")
-        ico_path: str = os.path.join(cwd, ".setup", "logo.ico")
-
-        build_dir = "build"
-        # DIST_DIR = "dist"
-
-        pyinstaller_command: list[str] = [
-            "pyinstaller",
-            f"--add-data={png_path}:./.setup/",
-            f"--add-data={ico_path}:./.setup/",
-            f"--icon={ico_path}",
-            "-nTradingvview Indicator Access Management",
-            "--onefile",
-            "--windowed",
-            "--distpath",
-            output_dir,
-            entry_path,
-        ]
-
-        try:
-            subprocess.run(args=pyinstaller_command, check=True)
-            print("PyInstaller build completed successfully.")
-
-            try:
-                shutil.rmtree(build_dir, ignore_errors=True)
-                os.remove(
-                    path=os.path.join(
-                        os.getcwd(), "Tradingvview Indicator Access Management.spec"
                     )
                 )
                 print("\nBuild files cleaned up successfully.")
