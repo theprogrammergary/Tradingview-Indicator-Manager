@@ -6,9 +6,9 @@ __pycache__/
 login.json
 desktop-app/.DS_Store
 *.log
+python/src/.setup/logo.zip
 
 # typescript-chrome-extension
 node_modules/
 dist/
 
-python/src/.setup/logo.zip
