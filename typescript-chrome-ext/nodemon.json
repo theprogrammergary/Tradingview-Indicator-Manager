@@ -1,5 +1,5 @@
 {
-  "watch": ["src", "src/css"],
+  "watch": ["src", "src/pages"],
   "ext": "ts, css, html",
   "ignore": ["src/**/*.spec.ts"],
   "exec": "tsc && copyfiles -u 1 \"src/**/*.html\" \"src/**/*.css\" dist"
