@@ -96,7 +96,6 @@ interface ResponseJson {
         console.error(`Error in getting user list for ${pine_id}:`, error);
       }
 
-      console.log(user_list);
       return user_list;
     }
   }
