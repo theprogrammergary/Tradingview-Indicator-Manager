@@ -25,10 +25,6 @@ chrome.runtime.onMessage.addListener(async (message) => {
         if (currentTab && currentTab.id) {
           await chrome.scripting.executeScript({
             target: { tabId: currentTab.id },
-            files: ["dist/background/pineID.js"],
-          });
-          await chrome.scripting.executeScript({
-            target: { tabId: currentTab.id },
             files: ["dist/background/tradingview.js"],
           });
         }
@@ -37,23 +33,4 @@ chrome.runtime.onMessage.addListener(async (message) => {
   } else {
     console.log(message.action.toUpperCase(), message.data);
   }
-
-  // } else if (message.action === "new list management") {
-  //   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  //     const currentTab = tabs[0];
-  //     if (currentTab && currentTab.id) {
-  //       chrome.scripting.executeScript({
-  //         target: { tabId: currentTab.id },
-  //         files: ["dist/background/manage.js"],
-  //       }, () => {
-  //         if (currentTab && currentTab.id)
-  //           chrome.scripting.executeScript({
-  //             target: { tabId: currentTab.id },
-  //             args: ["testing123"],
-  //             func: (...args: string[]) => listManagement(...args),
-  //           });
-  //       });
-  //     }
-  //   });
-  // }
 });
