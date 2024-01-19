@@ -2,8 +2,6 @@ export function step3(
   csvData: string[][],
   selectedUsernameColumn: number
 ): Promise<string[]> {
-  console.log("hello from step 3");
-
   return new Promise((resolve, reject) => {
     if (selectedUsernameColumn < 0) {
       reject(new Error("Invalid username column."));

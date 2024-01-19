@@ -1,6 +1,4 @@
 export function step1(): Promise<string[][]> {
-  console.log("hello from step 1");
-
   return new Promise((resolve, reject) => {
     const s1UploadFileInput = document.getElementById(
       "s1UploadFileInput"

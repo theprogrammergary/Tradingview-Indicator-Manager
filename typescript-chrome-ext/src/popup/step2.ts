@@ -1,6 +1,4 @@
 export function step2(csvData: string[][]): Promise<number> {
-  console.log("hello from step 2");
-
   return new Promise((resolve, reject) => {
     const s2NextBTN = document.getElementById("s2NextBTN") as HTMLButtonElement;
     const s2UsernameColumnSelect = document.getElementById(
