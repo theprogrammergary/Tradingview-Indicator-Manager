@@ -1,23 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "valid manage access page") {
+      if (message.data.valid) {
+        setIndicatorName(message.data.indicatorName);
+        sessionStorage.setItem("scriptID", message.scriptID);
+      } else {
+        setInvalidHTML();
+      }
+    }
+  });
+
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs[0].id) {
       chrome.scripting.executeScript({
         target: { tabId: tabs[0].id },
         func: validManageAccessPage,
       });
-    }
-  });
-
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message.type === "validManageAccessPage") {
-      console.log("validManageAccessPage:", message);
-
-      if (message.manageAccessBTN) {
-        setIndicatorName(message.indicatorName);
-        sessionStorage.setItem("scriptID", message.scriptID);
-      } else {
-        setInvalidHTML();
-      }
     }
   });
 });
@@ -47,6 +45,26 @@ function validManageAccessPage(): void {
     ".tv-social-stats__item.i-checked.js-chart-view__manage-access.apply-common-tooltip.tv-social-stats__item--button"
   ) as HTMLButtonElement | null;
 
+  if (!manageAccessBTN) {
+    chrome.runtime.sendMessage({
+      action: "valid manage access page",
+      data: { pineID: "", indicatorName: "", valid: false },
+    });
+    return;
+  }
+
+  const indicatorNameElement = document.querySelector(
+    ".tv-chart-view__title-name.js-chart-view__name"
+  ) as HTMLSpanElement | null;
+  if (!indicatorNameElement) {
+    chrome.runtime.sendMessage({
+      action: "valid manage access page",
+      data: { pineID: "", indicatorName: "", valid: false },
+    });
+    return;
+  }
+
+  const indicatorName = indicatorNameElement?.textContent ?? null;
   const scriptID = manageAccessBTN?.getAttribute("data-script-id-part") ?? null;
   if (scriptID) {
     chrome.storage.local
@@ -54,19 +72,10 @@ function validManageAccessPage(): void {
       .catch((error) => console.log(error));
   }
 
-  const indicatorNameElement = document.querySelector(
-    ".tv-chart-view__title-name.js-chart-view__name"
-  ) as HTMLSpanElement | null;
-
-  const indicatorName = indicatorNameElement?.textContent ?? null;
-
-  if (!manageAccessBTN) {
-    console.error("manageAccess Button Not Found!");
-  }
-
-  if (!indicatorName) {
-    console.error("Indicator Name Not Found");
-  }
+  chrome.runtime.sendMessage({
+    action: "valid manage access page",
+    data: { pineID: scriptID, indicatorName: indicatorName, valid: true },
+  });
 }
 
 function setInvalidHTML(): void {
@@ -79,6 +88,9 @@ function setIndicatorName(newName: string): void {
   if (indicatorNameElement) {
     indicatorNameElement.textContent = newName;
   } else {
-    console.error("Indicator name element not found");
+    chrome.runtime.sendMessage({
+      action: "valid manage access page",
+      data: { pineID: "", indicatorName: "", valid: false },
+    });
   }
 }

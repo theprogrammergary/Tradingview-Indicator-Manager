@@ -30,7 +30,9 @@ chrome.runtime.onMessage.addListener(async (message) => {
         }
       }
     );
-  } else {
+  } else if (message && message.action) {
     console.log(message.action.toUpperCase(), message.data);
+  } else {
+    console.log(message);
   }
 });
