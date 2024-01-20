@@ -6,7 +6,7 @@ Managing users to private Tradingview indicators is a slow and tideous process. 
 
 ##### Images
 
-- ![verify](images/main.gif)
+![verify](images/main.gif)
 
 #### Contact
 
