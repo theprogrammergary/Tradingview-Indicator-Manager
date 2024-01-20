@@ -4,13 +4,11 @@
 
 Managing users to private Tradingview indicators is a slow and tideous process. This repo contains various solutions in different technologies to make the process better. The best solution is to fully automate the process, but that requires a custom-fit solution. In this repo you can manage access to an indicator by simply uploading a list; rather than, manually adding/removing each individual user. For more details see each individual README inside the solution's directory.
 
-##### Images
-
-![verify](images/main.gif)
+![images](images/main.gif)
 
 #### Contact
 
-The entire process can be automated for your business. If you are interested in that please email me at theprogrammergary@gmail.com.
+The entire process for indicator management can be automated. Your users can receive access to indicators immediately after purchase. If you are interested in that solution please contact me.
 
 <br></br>
 
